@@ -3,6 +3,7 @@ import Hero from "./components/Hero";
 import Intro from "./components/Intro";
 import ProjectUniverse from "./components/ProjectUniverse";
 import CaseStudy from "./components/CaseStudy";
+import NeovoltCaseStudy from "./components/NeovoltCaseStudy";
 import SkillsMatrix from "./components/SkillsMatrix";
 import BuildArchive from "./components/BuildArchive";
 import Process from "./components/Process";
@@ -19,8 +20,10 @@ export default function Home() {
         <Intro />
         {/* 03 Project Universe */}
         <ProjectUniverse />
-        {/* 04 Featured Case Study */}
+        {/* 04 Featured Case Study — Barber Booking */}
         <CaseStudy />
+        {/* 04B Case Study — NEOVOLT */}
+        <NeovoltCaseStudy />
         {/* 05 Skills Matrix */}
         <SkillsMatrix />
         {/* 06 Build Archive */}

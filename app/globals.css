@@ -197,6 +197,130 @@ body {
   cursor: none !important;
 }
 
+/* ── Arrow nudge — buttons/links with trailing → or ↗ ───────────────────── */
+.btn-arrow .arrow,
+.btn-arrow .arrow-diag {
+  display: inline-block;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-arrow:hover .arrow      { transform: translateX(5px); }
+.btn-arrow:hover .arrow-diag { transform: translate(3px, -3px); }
+@media (prefers-reduced-motion: reduce) {
+  .btn-arrow .arrow,
+  .btn-arrow .arrow-diag { transition: none; }
+  .btn-arrow:hover .arrow,
+  .btn-arrow:hover .arrow-diag { transform: none; }
+}
+
+/* ── Press depth — instant physical feedback on active ───────────────────── */
+.btn-press:active { transform: scale(0.97) translateY(0.5px); }
+@media (prefers-reduced-motion: reduce) {
+  .btn-press:active { transform: none; opacity: 0.80; }
+}
+
+/* ── Premium button shell ────────────────────────────────────────────────── */
+/* Add class="btn-premium" + usePremiumButton(ref) to get magnetic/light/ripple */
+.btn-premium {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Inner light — cursor-following radial via --btn-lx/--btn-ly (set by hook) */
+.btn-premium::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--btn-lx, 50%) var(--btn-ly, 50%),
+    rgba(255, 255, 255, 0.11) 0%,
+    transparent 65%
+  );
+  opacity: var(--btn-light, 0);
+  transition: opacity 0.28s ease;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+/* Click ripple — thin ring pulse, not a filled circle */
+.btn-ripple {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.38);
+  background: transparent;
+  transform: translate(-50%, -50%) scale(0);
+  animation: btn-pulse 400ms cubic-bezier(0, 0.2, 0.5, 1) forwards;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes btn-pulse {
+  0%   { transform: translate(-50%, -50%) scale(0);  opacity: 0.72; }
+  100% { transform: translate(-50%, -50%) scale(16); opacity: 0; }
+}
+
+/* ── Pointer-position glow overlay (--glow-x/y/opacity set via JS) ──────── */
+.card-glow-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(0, 212, 255, 0.072) 0%,
+    transparent 60%
+  );
+  opacity: var(--glow-opacity, 0);
+  transition: opacity 0.35s ease;
+}
+
+/* ── Project card 3D tilt ────────────────────────────────────────────────── */
+
+/* Hovered card layers above dimmed siblings */
+.card-tilt-wrap {
+  transition: opacity 0.28s ease, filter 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+}
+.card-tilt-wrap:hover {
+  z-index: 10;
+}
+
+/* Dim inactive cards when any card in the grid is hovered (CSS :has — modern browsers) */
+.cards-grid:has(.card-tilt-wrap:hover) .card-tilt-wrap:not(:hover) {
+  opacity: 0.70;
+  filter: brightness(0.76) saturate(0.85);
+}
+
+/* Reduced-motion: skip tilt, keep simple highlight only */
+@media (prefers-reduced-motion: reduce) {
+  .card-tilt-wrap {
+    transition: opacity 0.18s ease, border-color 0.18s ease !important;
+  }
+  .cards-grid:has(.card-tilt-wrap:hover) .card-tilt-wrap:not(:hover) {
+    opacity: 0.82;
+    filter: none;
+  }
+}
+
+/* ── Process stage card reveal ──────────────────────────────────────── */
+@keyframes stage-reveal {
+  from { opacity: 0; transform: translateY(9px) scale(0.985); filter: blur(2px); }
+  to   { opacity: 1; transform: translateY(0)  scale(1);     filter: blur(0px); }
+}
+.stage-card-reveal {
+  animation: stage-reveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Process execution panel content reveal ─────────────────────────── */
+@keyframes panel-content-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.panel-content-reveal {
+  animation: panel-content-in 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* ── Scrollbar ───────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }

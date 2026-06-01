@@ -3,84 +3,111 @@
 import { useState, useRef } from "react";
 import { capabilitySystem, type Capability } from "../lib/data";
 import { SectionLabel } from "./SectionLabel";
-import { useReveal } from "../lib/hooks";
+import { useReveal, usePointerGlow } from "../lib/hooks";
 
-// ── Capability Console ────────────────────────────────────────────────────────
+// ── Accent color per metric ───────────────────────────────────────────────────
 
-function CapabilityConsole({ active }: { active: Capability | null }) {
+const METRIC_BADGE: Record<string, string> = {
+  Design:   "text-[#00d4ff]   border-[#00d4ff]/25   bg-[#00d4ff]/06",
+  Build:    "text-[#00d4ff]   border-[#00d4ff]/25   bg-[#00d4ff]/06",
+  Motion:   "text-[#ff6b35]   border-[#ff6b35]/25   bg-[#ff6b35]/06",
+  Logic:    "text-[#00d4ff]   border-[#00d4ff]/25   bg-[#00d4ff]/06",
+  Workflow: "text-[#ff6b35]   border-[#ff6b35]/25   bg-[#ff6b35]/06",
+};
+
+const METRIC_ACCENT: Record<string, string> = {
+  Design:   "rgba(0,212,255,0.65)",
+  Build:    "rgba(0,212,255,0.65)",
+  Motion:   "rgba(255,107,53,0.65)",
+  Logic:    "rgba(0,212,255,0.65)",
+  Workflow: "rgba(255,107,53,0.65)",
+};
+
+// ── Selected Capability Panel ─────────────────────────────────────────────────
+
+function CapabilityPanel({ active }: { active: Capability | null }) {
   return (
     <div className="panel rounded-sm overflow-hidden">
-      {/* Window bar */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-white/5 bg-white/[0.015]">
+      {/* OS chrome bar */}
+      <div
+        className="flex items-center gap-3 px-5 py-2.5 border-b border-white/5"
+        style={{ background: "rgba(0,0,0,0.18)" }}
+      >
         <div className="flex gap-1.5" aria-hidden="true">
           <div className="w-2 h-2 rounded-full bg-white/8" />
           <div className="w-2 h-2 rounded-full bg-white/8" />
           <div className="w-2 h-2 rounded-full bg-[#00d4ff]/25" />
         </div>
-        <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#5a6070] ml-1">
-          capability.console
+        <span className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#5a6070]/60 ml-1">
+          selected capability
         </span>
         <div className="ml-auto flex items-center gap-1.5">
           <div
             aria-hidden="true"
             className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-              active ? "bg-[#00d4ff] animate-glow-pulse" : "bg-[#5a6070]/40"
+              active ? "bg-[#00d4ff] animate-glow-pulse" : "bg-[#5a6070]/30"
             }`}
           />
-          <span className="font-mono text-[9px] text-[#5a6070]">
-            {active ? "ACTIVE" : "IDLE"}
+          <span className="font-mono text-[8px] tracking-widest uppercase text-[#5a6070]/60">
+            {active ? "ready" : "idle"}
           </span>
         </div>
       </div>
 
-      {/* Terminal body */}
-      <div className="px-5 py-5 min-h-[140px] flex flex-col justify-center font-mono text-xs leading-6 overflow-hidden">
+      {/* Panel body */}
+      <div className="px-6 py-5 min-h-[118px] flex flex-col justify-center">
         {active ? (
-          <div className="space-y-1 min-w-0">
-            <div className="flex items-baseline gap-2 min-w-0">
-              <span className="text-[#00d4ff]/30 flex-shrink-0">›</span>
-              <span className="text-[#5a6070] flex-shrink-0">capability.active :</span>
-              <span className="text-[#f0f0f0] truncate">{active.label}</span>
-            </div>
-            <div className="flex items-baseline gap-2 min-w-0">
-              <span className="text-[#00d4ff]/30 flex-shrink-0">›</span>
-              <span className="text-[#5a6070] flex-shrink-0">metric :</span>
-              <span className="text-[#ff6b35]/80 truncate">{active.metric}</span>
-            </div>
-            <div className="flex items-baseline gap-2 min-w-0">
-              <span className="text-[#00d4ff]/30 flex-shrink-0">›</span>
-              <span className="text-[#5a6070] flex-shrink-0">output :</span>
-              <span className="text-[#8892a4] truncate">{active.consoleOutput.join(", ")}</span>
-            </div>
-            <div className="flex items-baseline gap-2 min-w-0">
-              <span className="text-[#00d4ff]/30 flex-shrink-0">›</span>
-              <span className="text-[#5a6070] flex-shrink-0">linked.projects :</span>
-              <span className="text-[#00d4ff]/70 truncate">{active.usedIn.join(", ")}</span>
-            </div>
-            <div className="flex items-center gap-2 pt-1 min-w-0">
-              <span className="text-[#00d4ff]/30 flex-shrink-0">›</span>
-              <span className="text-[#5a6070] flex-shrink-0">status :</span>
-              <div className="flex-1 h-px bg-white/8 mx-1" aria-hidden="true" />
-              <span className="text-[#00d4ff] flex-shrink-0">READY</span>
-            </div>
+          <div className="grid grid-cols-[auto_1fr] gap-x-5 gap-y-2.5 items-baseline">
+            {/* Capability */}
+            <span className="font-mono text-[8px] tracking-[0.18em] uppercase text-[#5a6070]/60 whitespace-nowrap">
+              Capability
+            </span>
+            <span className="text-sm font-semibold text-[#f0f0f0]">{active.label}</span>
+
+            {/* Outcome */}
+            <span className="font-mono text-[8px] tracking-[0.18em] uppercase text-[#5a6070]/60 whitespace-nowrap">
+              Outcome
+            </span>
+            <span
+              className="text-sm font-medium"
+              style={{ color: METRIC_ACCENT[active.metric] ?? METRIC_ACCENT.Design }}
+            >
+              {active.outcome}
+            </span>
+
+            {/* Output */}
+            <span className="font-mono text-[8px] tracking-[0.18em] uppercase text-[#5a6070]/60 whitespace-nowrap">
+              Output
+            </span>
+            <span className="text-xs text-[#8892a4] leading-snug">
+              {active.consoleOutput.join(", ")}
+            </span>
+
+            {/* Used in */}
+            <span className="font-mono text-[8px] tracking-[0.18em] uppercase text-[#5a6070]/60 whitespace-nowrap">
+              Used in
+            </span>
+            <span className="text-xs text-[#00d4ff]/65 leading-snug">
+              {active.usedIn.join(", ")}
+            </span>
+
+            {/* Status */}
+            <span className="font-mono text-[8px] tracking-[0.18em] uppercase text-[#5a6070]/60 whitespace-nowrap">
+              Status
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="flex-1 h-px bg-white/6" aria-hidden="true" />
+              <span className="font-mono text-[9px] tracking-widest uppercase text-[#00d4ff]">
+                Ready
+              </span>
+            </span>
           </div>
         ) : (
-          <div className="space-y-1 min-w-0">
-            <div className="flex items-baseline gap-2">
-              <span className="text-[#00d4ff]/20 flex-shrink-0">›</span>
-              <span className="text-[#5a6070]/50">capability.active :</span>
-              <span className="text-[#5a6070]/50">null</span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-[#00d4ff]/20 flex-shrink-0">›</span>
-              <span className="text-[#5a6070]/40">select a capability card to load profile</span>
-            </div>
-            <div className="flex items-center gap-2 pt-1 min-w-0">
-              <span className="text-[#00d4ff]/20 flex-shrink-0">›</span>
-              <span className="text-[#5a6070]/30 flex-shrink-0">status :</span>
-              <div className="flex-1 h-px bg-white/4 mx-1" aria-hidden="true" />
-              <span className="text-[#5a6070]/50 flex-shrink-0">IDLE</span>
-            </div>
+          <div className="flex items-center gap-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#5a6070]/25 flex-shrink-0" aria-hidden="true" />
+            <span className="font-mono text-[9px] tracking-[0.12em] text-[#5a6070]/50">
+              Select a capability to see how it connects to real project outcomes.
+            </span>
           </div>
         )}
       </div>
@@ -90,54 +117,52 @@ function CapabilityConsole({ active }: { active: Capability | null }) {
 
 // ── Capability card ───────────────────────────────────────────────────────────
 
-const METRIC_COLOR: Record<string, string> = {
-  Design:   "text-[#00d4ff]   border-[#00d4ff]/25   bg-[#00d4ff]/06",
-  Build:    "text-[#00d4ff]   border-[#00d4ff]/25   bg-[#00d4ff]/06",
-  Motion:   "text-[#ff6b35]   border-[#ff6b35]/25   bg-[#ff6b35]/06",
-  Logic:    "text-[#00d4ff]   border-[#00d4ff]/25   bg-[#00d4ff]/06",
-  Workflow: "text-[#ff6b35]   border-[#ff6b35]/25   bg-[#ff6b35]/06",
-};
-
 function CapabilityCard({
   cap,
   isActive,
+  dimmed,
   onClick,
 }: {
   cap: Capability;
   isActive: boolean;
+  dimmed: boolean;
   onClick: () => void;
 }) {
-  const metricCls = METRIC_COLOR[cap.metric] ?? METRIC_COLOR.Design;
+  const badgeCls   = METRIC_BADGE[cap.metric] ?? METRIC_BADGE.Design;
+  const accentRgb  = METRIC_ACCENT[cap.metric] ?? METRIC_ACCENT.Design;
+  const cardRef    = useRef<HTMLButtonElement>(null);
+  usePointerGlow(cardRef);
 
   return (
     <button
+      ref={cardRef}
       onClick={onClick}
       aria-pressed={isActive}
       aria-label={`Select ${cap.label} capability`}
-      className={`reveal text-left w-full panel rounded-sm p-5 flex flex-col gap-4 transition-all duration-250 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00d4ff]/40 ${
+      className={`btn-press relative overflow-hidden text-left w-full panel rounded-sm p-5 flex flex-col gap-4 transition-all duration-250 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00d4ff]/50 ${
         isActive
-          ? "border-[#00d4ff]/40 bg-[#00d4ff]/05 shadow-[0_0_24px_rgba(0,212,255,0.06)]"
+          ? "border-[#00d4ff]/55 bg-[#00d4ff]/[0.05] shadow-[0_0_30px_rgba(0,212,255,0.10)]"
           : "hover:border-white/14 hover:bg-white/[0.025]"
-      }`}
+      } ${dimmed ? "opacity-[0.72]" : ""}`}
+      style={{ transition: "opacity 0.22s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease" }}
     >
+      <div className="card-glow-layer" aria-hidden="true" />
+
       {/* Top row: icon + metric badge */}
       <div className="flex items-start justify-between">
         <span
-          className={`font-mono text-xl transition-colors duration-200 ${
-            isActive ? "text-[#00d4ff]" : "text-[#00d4ff]/30 group-hover:text-[#00d4ff]/60"
-          }`}
+          className="font-mono text-xl transition-colors duration-200"
+          style={{ color: isActive ? accentRgb : "rgba(0,212,255,0.25)" }}
           aria-hidden="true"
         >
           {cap.icon}
         </span>
-        <span
-          className={`font-mono text-[8px] tracking-widest uppercase px-2 py-0.5 border rounded-sm ${metricCls}`}
-        >
+        <span className={`font-mono text-[8px] tracking-widest uppercase px-2 py-0.5 border rounded-sm ${badgeCls}`}>
           {cap.metric}
         </span>
       </div>
 
-      {/* Title */}
+      {/* Title + outcome + description */}
       <div>
         <h3
           className={`text-sm font-bold leading-snug transition-colors duration-200 ${
@@ -146,7 +171,14 @@ function CapabilityCard({
         >
           {cap.label}
         </h3>
-        <p className="text-xs text-[#5a6070] leading-relaxed mt-1.5">
+        {/* Outcome line — between title and description */}
+        <p
+          className="font-mono text-[9px] tracking-[0.1em] mt-1 mb-2"
+          style={{ color: isActive ? accentRgb : "rgba(255,255,255,0.28)" }}
+        >
+          {cap.outcome}
+        </p>
+        <p className="text-xs text-[#8892a4] leading-relaxed">
           {cap.description}
         </p>
       </div>
@@ -169,18 +201,18 @@ function CapabilityCard({
 
       {/* Used in */}
       <div className="pt-1 border-t border-white/5">
-        <span className="font-mono text-[8px] tracking-[0.18em] uppercase text-[#5a6070]/60 block mb-1.5">
+        <span
+          className="font-mono text-[8px] tracking-[0.18em] uppercase block mb-1.5"
+          style={{ color: "rgba(255,255,255,0.22)" }}
+        >
           Used in
         </span>
-        <div className="flex flex-wrap gap-1.5">
-          {cap.usedIn.map((name) => (
-            <span
-              key={name}
-              className="font-mono text-[9px] text-[#8892a4]/70"
-            >
+        <div className="flex flex-wrap gap-x-2 gap-y-0.5">
+          {cap.usedIn.map((name, i) => (
+            <span key={name} className="font-mono text-[9px] text-[#8892a4]/60">
               {name}
-              {name !== cap.usedIn[cap.usedIn.length - 1] && (
-                <span className="text-white/15 ml-1.5">·</span>
+              {i < cap.usedIn.length - 1 && (
+                <span className="text-white/12 ml-2" aria-hidden="true">·</span>
               )}
             </span>
           ))}
@@ -198,6 +230,7 @@ export default function SkillsMatrix() {
   useReveal(sectionRef, ".reveal");
 
   const activeCapability = capabilitySystem.find((c) => c.id === activeId) ?? null;
+  const hasActive = activeId !== null;
 
   const toggle = (id: string) =>
     setActiveId((prev) => (prev === id ? null : id));
@@ -212,27 +245,27 @@ export default function SkillsMatrix() {
           <h2 className="text-4xl md:text-5xl font-bold text-[#f0f0f0] tracking-tight leading-tight mb-4">
             What I Bring
           </h2>
-          <p className="text-[#5a6070] max-w-xl leading-relaxed">
-            Clients don&apos;t buy React or Tailwind. They buy outcomes — a premium first impression,
-            a system that works, motion that feels alive.
+          <p className="text-[#8892a4] max-w-xl leading-relaxed">
+            Not just tools — the systems behind premium websites, motion, and working products.
           </p>
         </div>
 
-        {/* Capability cards — 2-col md, 3-col lg, 5-col xl */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 mb-6">
+        {/* Capability cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 mb-4">
           {capabilitySystem.map((cap) => (
             <CapabilityCard
               key={cap.id}
               cap={cap}
               isActive={activeId === cap.id}
+              dimmed={hasActive && activeId !== cap.id}
               onClick={() => toggle(cap.id)}
             />
           ))}
         </div>
 
-        {/* Capability Console */}
+        {/* Selected capability panel */}
         <div className="reveal">
-          <CapabilityConsole active={activeCapability} />
+          <CapabilityPanel active={activeCapability} />
         </div>
       </div>
     </section>

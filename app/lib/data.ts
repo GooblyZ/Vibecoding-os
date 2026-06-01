@@ -42,6 +42,8 @@ export interface Capability {
   skills: string[];
   /** Project names this capability has been applied in */
   usedIn: string[];
+  /** What this capability creates — outcome for the client */
+  outcome: string;
   /** Short phrases for the Capability Console terminal output */
   consoleOutput: string[];
 }
@@ -64,6 +66,8 @@ export interface PipelineStage {
   output: string;
   /** Console mode line — e.g. "definition" */
   mode: string;
+  /** Why this stage matters for the client */
+  clientValue: string;
 }
 
 export interface CreatorStat {
@@ -127,7 +131,7 @@ export const projects: Project[] = [
     status: "live",
     accentColor: "#00d4ff",
     bgColor: "rgba(0,212,255,0.06)",
-    caseStudyUrl: "#case-study",
+    caseStudyUrl: "#case-study-barber",
   },
   {
     id: "neovolt",
@@ -148,7 +152,7 @@ export const projects: Project[] = [
     status: "live",
     accentColor: "#ff6b35",
     bgColor: "rgba(255,107,53,0.06)",
-    caseStudyUrl: "#case-study",
+    caseStudyUrl: "#case-study-neovolt",
   },
   {
     id: "obsidian",
@@ -276,6 +280,7 @@ export const capabilitySystem: Capability[] = [
       "Visual systems that give a website atmosphere, hierarchy, and a premium first impression.",
     skills: ["Typography", "Color Systems", "Layout Rhythm", "Hierarchy", "Brand Atmosphere"],
     usedIn: ["NEOVOLT", "VibeCoding OS", "Digital Gallery"],
+    outcome: "Premium first impression",
     consoleOutput: ["visual hierarchy", "brand atmosphere", "premium first impression"],
   },
   {
@@ -287,6 +292,7 @@ export const capabilitySystem: Capability[] = [
       "Clean component-based builds that stay scalable, responsive, and maintainable.",
     skills: ["React", "Next.js", "TypeScript", "Tailwind", "Reusable Components"],
     usedIn: ["VibeCoding OS", "Barber Booking System", "Useless Daily"],
+    outcome: "Clean, scalable interface",
     consoleOutput: ["scalable components", "responsive layout", "clean typed code"],
   },
   {
@@ -298,6 +304,7 @@ export const capabilitySystem: Capability[] = [
       "Controlled animation systems that make interfaces feel alive without turning the site into noise.",
     skills: ["Scroll Reveals", "Hover States", "SVG Motion", "Cinematic Timing", "Reduced-Motion Support"],
     usedIn: ["NEOVOLT", "Obsidian / Bat Scroll", "VibeCoding OS"],
+    outcome: "Interfaces that feel alive",
     consoleOutput: ["cinematic timing", "scroll-driven reveals", "interface rhythm"],
   },
   {
@@ -309,6 +316,7 @@ export const capabilitySystem: Capability[] = [
       "User flows and interface states designed around real actions, not just static pages.",
     skills: ["Booking Flows", "Status States", "Forms", "Dashboards", "User Journeys"],
     usedIn: ["Barber Booking System", "Useless Daily"],
+    outcome: "Real user flows",
     consoleOutput: ["real user flows", "status-driven states", "business-ready systems"],
   },
   {
@@ -320,6 +328,7 @@ export const capabilitySystem: Capability[] = [
       "Fast AI-assisted iteration with structured prompts, debugging loops, and build verification.",
     skills: ["Claude Code", "Prompt Systems", "Rapid Prototyping", "Refactoring", "Build Checks"],
     usedIn: ["All current builds"],
+    outcome: "Faster build cycles",
     consoleOutput: ["structured prompt loops", "rapid iteration", "verified output"],
   },
 ];
@@ -335,6 +344,7 @@ export const processPipeline: PipelineStage[] = [
       "Define the goal, audience, and desired outcome before touching the interface.",
     output: "clear direction",
     mode: "definition",
+    clientValue: "Avoids building the wrong thing.",
   },
   {
     id: "02",
@@ -343,6 +353,7 @@ export const processPipeline: PipelineStage[] = [
       "Map the sections, content hierarchy, user journey, and conversion flow.",
     output: "content architecture",
     mode: "architecture",
+    clientValue: "Makes the site easier to understand.",
   },
   {
     id: "03",
@@ -351,6 +362,7 @@ export const processPipeline: PipelineStage[] = [
       "Create the visual language: typography, color, spacing, atmosphere, and interface rhythm.",
     output: "visual system",
     mode: "visual system",
+    clientValue: "Creates a premium first impression.",
   },
   {
     id: "04",
@@ -359,6 +371,7 @@ export const processPipeline: PipelineStage[] = [
       "Turn the system into responsive components, clean layouts, and working interactions.",
     output: "working interface",
     mode: "implementation",
+    clientValue: "Turns the plan into a working interface.",
   },
   {
     id: "05",
@@ -367,6 +380,7 @@ export const processPipeline: PipelineStage[] = [
       "Test the experience, sharpen the UX, improve copy, remove friction, and polish details.",
     output: "polished experience",
     mode: "quality loop",
+    clientValue: "Removes friction and raises quality.",
   },
   {
     id: "06",
@@ -375,6 +389,7 @@ export const processPipeline: PipelineStage[] = [
       "Run build checks, verify responsiveness, prepare links, and make the site ready to share.",
     output: "public-ready site",
     mode: "deployment",
+    clientValue: "Gets the site ready to share, sell, and test.",
   },
 ];
 

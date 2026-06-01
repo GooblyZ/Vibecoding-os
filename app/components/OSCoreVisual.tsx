@@ -52,8 +52,8 @@ export function OSCoreVisual() {
 
           {/* Radial glow gradient */}
           <radialGradient id="hero-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor={BLUE} stopOpacity="0.22" />
-            <stop offset="50%"  stopColor={BLUE} stopOpacity="0.09" />
+            <stop offset="0%"   stopColor={BLUE} stopOpacity="0.30" />
+            <stop offset="50%"  stopColor={BLUE} stopOpacity="0.11" />
             <stop offset="100%" stopColor={BLUE} stopOpacity="0" />
           </radialGradient>
 
@@ -128,7 +128,7 @@ export function OSCoreVisual() {
         {/* ── Inner ring (static, pulses) ───────────────────────── */}
         <circle
           cx={CX} cy={CY} r="76"
-          stroke={`rgba(0,212,255,0.2)`}
+          stroke={`rgba(0,212,255,0.28)`}
           strokeWidth="1"
           className="anim-core"
         />
@@ -140,12 +140,12 @@ export function OSCoreVisual() {
         <line x1={CX + 78}  y1={CY} x2={CX + 124} y2={CY}  stroke="rgba(0,212,255,0.1)" strokeWidth="1" strokeDasharray="2 5" />
 
         {/* ── Core ─────────────────────────────────────────────── */}
-        <circle cx={CX} cy={CY} r="44" fill="rgba(0,212,255,0.04)" />
-        <circle cx={CX} cy={CY} r="28" fill="rgba(0,212,255,0.07)" />
+        <circle cx={CX} cy={CY} r="44" fill="rgba(0,212,255,0.07)" />
+        <circle cx={CX} cy={CY} r="28" fill="rgba(0,212,255,0.11)" />
         <circle
           cx={CX} cy={CY} r="8"
           fill={BLUE}
-          opacity="0.45"
+          opacity="0.62"
           className="anim-core"
         />
         <circle cx={CX} cy={CY} r="3.5" fill={BLUE} opacity="0.9" />
@@ -158,7 +158,7 @@ export function OSCoreVisual() {
           fontSize="7"
           fontFamily="monospace"
           letterSpacing="2"
-          opacity="0.45"
+          opacity="0.60"
         >
           VC
         </text>
@@ -169,7 +169,7 @@ export function OSCoreVisual() {
           fontSize="7"
           fontFamily="monospace"
           letterSpacing="2"
-          opacity="0.45"
+          opacity="0.60"
         >
           OS
         </text>
