@@ -26,6 +26,8 @@ export interface Project {
   accentColor: string;
   bgColor: string;
   liveUrl?: string;
+  /** Override the default "View Live" CTA label (e.g. "View Project") */
+  liveLabel?: string;
   caseStudyUrl?: string;
 }
 
@@ -131,6 +133,7 @@ export const projects: Project[] = [
     status: "live",
     accentColor: "#00d4ff",
     bgColor: "rgba(0,212,255,0.06)",
+    liveUrl: "https://barber-shop-booking2.vercel.app/",
     caseStudyUrl: "#case-study-barber",
   },
   {
@@ -173,26 +176,29 @@ export const projects: Project[] = [
     status: "live",
     accentColor: "#00d4ff",
     bgColor: "rgba(0,212,255,0.04)",
+    liveUrl: "https://obsidian-vxjh.vercel.app/",
   },
   {
-    id: "digital-gallery",
-    name: "Digital Gallery",
-    year: 2024,
+    id: "room-planner-2d",
+    name: "2D Room Planner",
+    year: 2025,
     category: "Experiments",
-    type: "Interactive Image Gallery",
+    type: "Interactive Space Planning Tool",
     shortDescription:
-      "A clean space for visual work — masonry grid, smooth lightbox, full keyboard control.",
+      "An interactive 2D room planner for arranging spaces, placing objects, and visualizing layouts in the browser.",
     description:
-      "An interactive gallery for presenting photographic and design work. Responsive masonry grid, image hover reveals, keyboard navigation, and a smooth modal lightbox — nothing more, nothing less.",
+      "A browser-based planning interface for designing room layouts, arranging furniture, and visualizing spatial decisions with a clean 2D canvas experience.",
     problem:
-      "Most image galleries are either overbuilt (heavy JS frameworks) or underbuilt (plain CSS grids with no interactions). Neither feels intentional or spatial.",
+      "Planning a room layout usually means sketching on paper or paying for heavy software. There's no fast, browser-native tool that feels lightweight and immediate.",
     solution:
-      "A minimal React gallery with spatial layout logic, smooth keyboard navigation, accessible modal overlay, and clean hover states. Designed first, coded second.",
-    whatItProves: ["Media Layout", "Modal UX", "Keyboard Accessibility", "Clean UI Logic", "Component Architecture"],
-    tech: ["React", "CSS Grid", "Framer Motion", "TypeScript"],
-    status: "concept",
+      "A self-contained HTML5 Canvas planner where users draw walls, drop furniture, drag and resize objects, and see their space take shape in real time — zero install required.",
+    whatItProves: ["2D Layout", "Interactive UI", "Spatial Design"],
+    tech: ["HTML5 Canvas", "Vanilla JS", "CSS"],
+    status: "live",
     accentColor: "#00d4ff",
     bgColor: "rgba(0,212,255,0.04)",
+    liveUrl: "https://room-planner-2-d.vercel.app/",
+    liveLabel: "View Project",
   },
   {
     id: "useless-daily",

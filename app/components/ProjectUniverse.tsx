@@ -34,7 +34,7 @@ function ProjectCard({ project }: { project: Project }) {
 
   // Single primary CTA: liveUrl > caseStudyUrl > nothing
   const cta = project.liveUrl
-    ? { href: project.liveUrl,     label: "View Live",   arrow: "↗" as const, external: true  }
+    ? { href: project.liveUrl,     label: project.liveLabel ?? "View Live", arrow: "↗" as const, external: true  }
     : project.caseStudyUrl
     ? { href: project.caseStudyUrl, label: "Case Study", arrow: "→" as const, external: false }
     : null;

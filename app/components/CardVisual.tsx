@@ -191,57 +191,94 @@ function ScrollVisual({ accent }: { accent: string }) {
   );
 }
 
-function GalleryVisual({ accent }: { accent: string }) {
-  // Masonry-style layout — varied heights for spatial interest
-  const frames = [
-    { x: 12,  y: 8,  w: 72, h: 52, featured: false },
-    { x: 88,  y: 8,  w: 52, h: 30, featured: false },
-    { x: 88,  y: 41, w: 52, h: 38, featured: false },
-    { x: 144, y: 8,  w: 86, h: 72, featured: true  }, // tall center — modal trigger
-    { x: 234, y: 8,  w: 72, h: 33, featured: false },
-    { x: 234, y: 44, w: 72, h: 33, featured: false },
-    { x: 12,  y: 63, w: 122, h: 47, featured: false },
-    { x: 234, y: 80, w: 72, h: 30, featured: false },
-  ];
+function RoomPlannerVisual({ accent }: { accent: string }) {
+  // 2D floor plan — walls, furniture, selected object with handles
+  const handles: [number, number][] = [[21, 54], [63, 54], [21, 75], [63, 75]];
+  const sofaCushions = [171, 202, 233];
   return (
     <svg viewBox="0 0 320 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      {frames.map((f, i) => (
-        <g key={i}>
-          <rect
-            x={f.x} y={f.y} width={f.w} height={f.h} rx={2}
-            fill={f.featured ? accent : "rgba(255,255,255,0.02)"}
-            stroke={f.featured ? accent : "rgba(255,255,255,0.07)"}
-            strokeWidth={f.featured ? 1 : 0.75}
-            opacity={f.featured ? 0.14 : 1}
-          />
-          {/* Subtle internal image hint — horizontal bands */}
-          {!f.featured && (
-            <>
-              <line x1={f.x + 4} y1={f.y + f.h * 0.40} x2={f.x + f.w - 4} y2={f.y + f.h * 0.40}
-                stroke="rgba(255,255,255,0.035)" strokeWidth={0.5} />
-              <line x1={f.x + 4} y1={f.y + f.h * 0.65} x2={f.x + f.w - 4} y2={f.y + f.h * 0.65}
-                stroke="rgba(255,255,255,0.025)" strokeWidth={0.5} />
-            </>
-          )}
-          {/* Frame index */}
-          <text x={f.x + 5} y={f.y + 10}
-            fill={accent} fontSize={6} fontFamily="monospace"
-            opacity={f.featured ? 0.55 : 0.14}>
-            {String(i + 1).padStart(2, "0")}
-          </text>
-        </g>
+      {/* ── Room boundary ── */}
+      <rect x={14} y={8} width={292} height={104} rx={1.5}
+        stroke={accent} strokeWidth={2.2} strokeOpacity={0.55} fill="none" />
+
+      {/* Interior dividing wall */}
+      <line x1={158} y1={8}  x2={158} y2={50} stroke={accent} strokeWidth={1.4} strokeOpacity={0.32} />
+      <line x1={158} y1={62} x2={158} y2={112} stroke={accent} strokeWidth={1.4} strokeOpacity={0.32} />
+      {/* Door arc hint */}
+      <path d="M 158 50 Q 144 50 144 62" stroke={accent} strokeWidth={0.75} strokeOpacity={0.22}
+        strokeDasharray="2 2" fill="none" />
+
+      {/* ── LEFT ROOM (bedroom) ── */}
+
+      {/* Bed */}
+      <rect x={22} y={14} width={52} height={34} rx={2}
+        fill={accent} fillOpacity={0.06} stroke={accent} strokeWidth={0.75} strokeOpacity={0.26} />
+      {/* Headboard */}
+      <rect x={22} y={14} width={52} height={8} rx={1.5}
+        fill={accent} fillOpacity={0.12} stroke={accent} strokeWidth={0.5} strokeOpacity={0.34} />
+      {/* Pillows */}
+      <rect x={28} y={26} width={16} height={9} rx={2}
+        fill={accent} fillOpacity={0.07} stroke={accent} strokeWidth={0.4} strokeOpacity={0.18} />
+      <rect x={50} y={26} width={16} height={9} rx={2}
+        fill={accent} fillOpacity={0.07} stroke={accent} strokeWidth={0.4} strokeOpacity={0.18} />
+      <text x={48} y={43} textAnchor="middle" fill={accent} fontSize={5.5} fontFamily="monospace" opacity={0.18}>BED</text>
+
+      {/* Wardrobe */}
+      <rect x={22} y={55} width={30} height={22} rx={1.5}
+        fill={accent} fillOpacity={0.05} stroke={accent} strokeWidth={0.75} strokeOpacity={0.22} />
+      <line x1={37} y1={55} x2={37} y2={77} stroke={accent} strokeWidth={0.5} strokeOpacity={0.16} />
+      <text x={37} y={68} textAnchor="middle" fill={accent} fontSize={4.5} fontFamily="monospace" opacity={0.18}>WRD</text>
+
+      {/* Nightstand */}
+      <rect x={80} y={14} width={14} height={14} rx={1.5}
+        fill={accent} fillOpacity={0.04} stroke={accent} strokeWidth={0.5} strokeOpacity={0.18} />
+
+      {/* Desk — SELECTED */}
+      <rect x={24} y={84} width={42} height={21} rx={1.5}
+        fill={accent} fillOpacity={0.13} stroke={accent} strokeWidth={1} strokeOpacity={0.78} />
+      {/* Dashed selection box */}
+      <rect x={21} y={81} width={48} height={27} rx={2}
+        stroke={accent} strokeWidth={0.75} strokeOpacity={0.58} strokeDasharray="3 2" fill="none" />
+      {/* Corner handles */}
+      {handles.map(([x, y], i) => (
+        <rect key={i} x={x - 2.5} y={y - 2.5} width={5} height={5} rx={0.75}
+          fill={accent} opacity={0.68} />
+      ))}
+      <text x={45} y={96} textAnchor="middle" fill={accent} fontSize={5.5} fontFamily="monospace" opacity={0.52}>DESK</text>
+
+      {/* Chair */}
+      <rect x={74} y={87} width={16} height={16} rx={8}
+        fill={accent} fillOpacity={0.05} stroke={accent} strokeWidth={0.5} strokeOpacity={0.18} />
+
+      {/* ── RIGHT ROOM (living) ── */}
+
+      {/* Sofa */}
+      <rect x={166} y={14} width={110} height={24} rx={3}
+        fill={accent} fillOpacity={0.07} stroke={accent} strokeWidth={0.75} strokeOpacity={0.26} />
+      {sofaCushions.map((x) => (
+        <rect key={x} x={x} y={18} width={28} height={13} rx={2}
+          fill={accent} fillOpacity={0.06} stroke={accent} strokeWidth={0.4} strokeOpacity={0.16} />
       ))}
 
-      {/* Modal hint overlay on featured frame */}
-      <rect x={144} y={8} width={86} height={72} rx={2}
-        stroke={accent} strokeWidth={1} strokeOpacity={0.45} fill="none" />
-      {/* Expand icon */}
-      <text x={187} y={50} fill={accent} fontSize={9} fontFamily="monospace"
-        opacity={0.40} textAnchor="middle">⊞</text>
-      <text x={187} y={62} fill={accent} fontSize={6} fontFamily="monospace"
-        opacity={0.22} textAnchor="middle">VIEW</text>
+      {/* Coffee table */}
+      <rect x={188} y={47} width={64} height={26} rx={2}
+        fill={accent} fillOpacity={0.06} stroke={accent} strokeWidth={0.75} strokeOpacity={0.24} />
+      <text x={220} y={62} textAnchor="middle" fill={accent} fontSize={5} fontFamily="monospace" opacity={0.20}>TABLE</text>
 
-      <ellipse cx="160" cy="60" rx="90" ry="40" fill={accent} opacity={0.04} />
+      {/* TV unit */}
+      <rect x={166} y={86} width={110} height={10} rx={1.5}
+        fill={accent} fillOpacity={0.04} stroke={accent} strokeWidth={0.5} strokeOpacity={0.22} />
+      <text x={221} y={93} textAnchor="middle" fill={accent} fontSize={4.5} fontFamily="monospace" opacity={0.18}>TV UNIT</text>
+
+      {/* ── Status / label bar ── */}
+      <rect x={108} y={104} width={104} height={9} rx={1.5}
+        fill="rgba(0,0,0,0.32)" stroke={accent} strokeWidth={0.5} strokeOpacity={0.30} />
+      <text x={160} y={110.5} textAnchor="middle" fill={accent} fontSize={5.5} fontFamily="monospace" opacity={0.55}>
+        ● DESK SELECTED
+      </text>
+
+      {/* Soft glow on selected area */}
+      <ellipse cx="45" cy="92" rx="32" ry="16" fill={accent} opacity={0.05} />
     </svg>
   );
 }
@@ -311,7 +348,7 @@ const VISUALS: Record<string, (accent: string) => ReactElement> = {
   "barber-booking":  (a) => <BookingVisual accent={a} />,
   "neovolt":         (a) => <MotionVisual  accent={a} />,
   "obsidian":        (a) => <ScrollVisual  accent={a} />,
-  "digital-gallery": (a) => <GalleryVisual accent={a} />,
+  "room-planner-2d": (a) => <RoomPlannerVisual accent={a} />,
   "useless-daily":   (a) => <GameVisual    accent={a} />,
 };
 
